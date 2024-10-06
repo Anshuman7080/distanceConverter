@@ -1,39 +1,48 @@
 (function () {
     "use strict";
-    let convertType='miles'
 
-    document.addEventListener('keydown',function(evt) {
-        let key=evt.key;
-        if(key==='k' || key==='K'){
-            convertType='kilometers';
+    let convertType = 'miles';
 
-            document.querySelector('h1').innerHTML='Kilometers To Miles Converter';
-            document.querySelector('p').innerHTML='Type in a number of Kilometers and click the button to convert the distance to Miles';
-        }
-        else if(key==='M' || key==='m'){
-            convertType='miles';
-            document.querySelector('h1').innerHTML='Miles To Kilometers Converter';
-            document.querySelector('p').innerHTML='Type in a number of Miles and click the button to convert the distance to Kilometers';
-        }
+    const updateUI = () => {
+        const title = convertType === 'miles' ? 
+            'Miles To Kilometers Converter' : 
+            'Kilometers To Miles Converter';
         
+        const description = convertType === 'miles' ? 
+            'Type in a number of Miles and click the button to convert the distance to Kilometers' : 
+            'Type in a number of Kilometers and click the button to convert the distance to Miles';
+
+        document.querySelector('h1').innerText = title;
+        document.querySelector('p').innerText = description;
+    };
+
+    document.addEventListener('keydown', (evt) => {
+        const key = evt.key.toLowerCase(); // Normalize key for easier comparison
+        if (key === 'k') {
+            convertType = 'kilometers';
+            updateUI();
+        } else if (key === 'm') {
+            convertType = 'miles';
+            updateUI();
+        }
     });
-    document.getElementById('convert').addEventListener('submit',function(event){
+
+    document.getElementById('convert').addEventListener('submit', (event) => {
         event.preventDefault();
-        let distance=document.getElementById('distance').value;
-        distance=parseFloat(distance);
-        if(distance){ 
-            if(convertType==='miles'){
-            let conversion=(distance*1.609334).toFixed(2);
-            document.getElementById('answer').innerHTML=`<h2>${distance} Miles converted into Kilometers ${conversion}</h2>`
-            }
-            else if(convertType==='kilometers'){
-                let conversion=(distance*0.621371).toFixed(2);
-                document.getElementById('answer').innerHTML=`<h2>${distance} Kilometers converted into Miless ${conversion}`
-            }
-        }
-         else{
-            document.getElementById('answer').innerHTML='Enter correct Value  '
+        const distanceInput = document.getElementById('distance').value;
+        const distance = parseFloat(distanceInput);
+
+        if (!isNaN(distance)) { 
+            const conversion = convertType === 'miles' 
+                ? (distance * 1.609334).toFixed(2) 
+                : (distance * 0.621371).toFixed(2);
+                
+            const unitConverted = convertType === 'miles' ? 'Kilometers' : 'Miles';
+            const unitOriginal = convertType === 'miles' ? 'Miles' : 'Kilometers';
+
+            document.getElementById('answer').innerHTML = `<h2>${distance} ${unitOriginal} converted into ${unitConverted} ${conversion}</h2>`;
+        } else {
+            document.getElementById('answer').innerText = 'Enter a valid number';
         }
     });
-        
 })();
